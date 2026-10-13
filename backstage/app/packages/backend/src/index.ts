@@ -51,6 +51,12 @@ backend.add(import('@backstage/plugin-search-backend-module-pg'));
 // search collators
 backend.add(import('@backstage/plugin-search-backend-module-catalog'));
 
+// kubernetes plugin: live status of DevBox resources
+backend.add(import('@backstage/plugin-kubernetes-backend'));
+
+// argocd plugin: sync/health of the Argo CD Application behind an entity
+backend.add(import('@backstage-community/plugin-argocd-backend'));
+
 // user settings plugin
 backend.add(import('@backstage/plugin-user-settings-backend'));
 

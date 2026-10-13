@@ -3,7 +3,9 @@
 # - annotation tracking: Crossplane objects carry owner refs that confuse Argo's default label tracking
 # - Lua health: a resource is healthy only when Crossplane says so (Ready/Healthy/Established, and not Synced=False)
 # - ProviderConfigUsage objects are noise in the UI
+# - accounts.backstage: API-key-only account for the Backstage Argo CD plugin (read-only, see argocd-rbac.yaml)
 data:
+  accounts.backstage: apiKey
   application.resourceTrackingMethod: annotation
   resource.exclusions: |
     - apiGroups:

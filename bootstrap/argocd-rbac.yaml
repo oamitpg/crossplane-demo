@@ -1,0 +1,7 @@
+# Strategic-merge patch for argocd-rbac-cm, applied once by hand next to argocd-config.yaml:
+#   kubectl -n argocd patch configmap argocd-rbac-cm --patch-file bootstrap/argocd-rbac.yaml
+# The `backstage` account (API key only, no login) may read applications and nothing else.
+# Token: argocd account generate-token --account backstage  -> ARGOCD_AUTH_TOKEN in Secret backstage-secrets
+data:
+  policy.csv: |
+    p, backstage, applications, get, */*, allow

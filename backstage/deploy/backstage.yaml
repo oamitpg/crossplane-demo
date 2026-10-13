@@ -1,6 +1,6 @@
 # The portal. The image is built locally and loaded into kind (see README), so it is never pulled.
 # Secret `backstage-secrets` (created by hand, see backstage/secret.yaml.tmpl) provides:
-#   POSTGRES_USER, POSTGRES_PASSWORD, GITHUB_TOKEN, AUTH_GITHUB_CLIENT_ID, AUTH_GITHUB_CLIENT_SECRET
+#   POSTGRES_USER, POSTGRES_PASSWORD, GITHUB_TOKEN, AUTH_GITHUB_CLIENT_ID, AUTH_GITHUB_CLIENT_SECRET, ARGOCD_AUTH_TOKEN
 apiVersion: v1
 kind: Service
 metadata:
@@ -31,9 +31,10 @@ spec:
       labels:
         app: backstage
     spec:
+      serviceAccountName: backstage
       containers:
         - name: backstage
-          image: lab/backstage:0.1.2
+          image: lab/backstage:0.1.3
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7007

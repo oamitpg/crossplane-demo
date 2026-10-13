@@ -8,6 +8,11 @@ metadata:
     - small
   annotations:
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/devboxes/
+    backstage.io/kubernetes-id: alice-dev
+    backstage.io/kubernetes-namespace: devboxes
+    argocd/instance-name: primary
+    argocd/app-name: devboxes
+    argocd/app-namespace: argocd
   links:
     - title: DevBox manifest in git
       url: https://github.com/oamitpg/crossplane-demo/blob/main/devboxes/alice-dev.yaml

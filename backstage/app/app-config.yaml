@@ -216,8 +216,7 @@ catalog:
     #   rules:
     #     - allow: [User, Group]
 
-kubernetes:
-  # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
+# kubernetes and argocd are configured in app-config.production.yaml (they only make sense inside the cluster)
 
 # see https://backstage.io/docs/permissions/getting-started for more on the permission framework
 permission:
