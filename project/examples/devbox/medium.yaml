@@ -1,0 +1,8 @@
+apiVersion: platform.slashdir.net/v1alpha1
+kind: DevBox
+metadata:
+  name: example-medium
+  namespace: devboxes
+spec:
+  size: medium
+  node: pve1

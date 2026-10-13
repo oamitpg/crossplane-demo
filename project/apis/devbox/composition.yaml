@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: devbox-lxc
+spec:
+  compositeTypeRef:
+    apiVersion: platform.slashdir.net/v1alpha1
+    kind: DevBox
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: evolite-devbox-platformcompose-devbox
+    step: compose-devbox
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready

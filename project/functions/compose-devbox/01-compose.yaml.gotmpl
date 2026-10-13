@@ -1,0 +1,52 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../schemas/json/index.schema.json
+
+# Expands a DevBox into one namespaced Proxmox LXC container.
+{{- $size := $xr.spec.size | default "small" }}
+{{- $sizes := dict
+    "small"  (dict "cores" 1 "memory" 256  "disk" 2)
+    "medium" (dict "cores" 2 "memory" 1024 "disk" 8)
+    "large"  (dict "cores" 4 "memory" 2048 "disk" 16) }}
+{{- $s := index $sizes $size }}
+---
+apiVersion: virtualenvironmentcontainer.proxmoxbpg.m.crossplane.io/v1alpha1
+kind: EnvironmentContainer
+metadata:
+  namespace: {{ $xr.metadata.namespace }}
+  annotations:
+    {{ setResourceNameAnnotation "container" }}
+spec:
+  providerConfigRef:
+    kind: ClusterProviderConfig
+    name: default
+  forProvider:
+    nodeName: {{ $xr.spec.node | default "pve1" }}
+    description: Managed by Crossplane DevBox {{ $xr.metadata.name }}
+    unprivileged: true
+    # Nested LXC in the simulated lab needs a node-side AppArmor workaround, so boxes are created stopped.
+    started: false
+    startOnBoot: false
+    cpu:
+      - cores: {{ $s.cores }}
+    memory:
+      - dedicated: {{ $s.memory }}
+        swap: 0
+    disk:
+      - datastoreId: local
+        size: {{ $s.disk }}
+    operatingSystem:
+      - templateFileId: local:vztmpl/alpine-3.24-default_20260714_amd64.tar.xz
+        type: alpine
+    networkInterface:
+      - name: eth0
+        bridge: vmbr0
+    initialization:
+      - hostname: {{ $xr.spec.hostname | default $xr.metadata.name }}
+        ipConfig:
+          - ipv4:
+              - address: dhcp
+---
+apiVersion: platform.slashdir.net/v1alpha1
+kind: DevBox
+status:
+  size: {{ $size }}
