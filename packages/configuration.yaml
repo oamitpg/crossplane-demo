@@ -1,0 +1,13 @@
+# The DevBox API (XRD + Composition + embedded function), built from project/ and published to ghcr.
+# Release: `crossplane project build && crossplane project push -t vX.Y.Z`, then bump the tag below.
+# The registry is private: the ghcr-pull Secret is created by hand (see README), not stored in git.
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: devbox-platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  package: ghcr.io/oamitpg/devbox-platform:v0.1.0
+  packagePullSecrets:
+    - name: ghcr-pull
