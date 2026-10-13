@@ -44,6 +44,16 @@ catalog:
     - allow: [Component, System, API, Resource, Location, Template]
   locations:
     - type: url
-      target: https://github.com/oamitpg/crossplane-demo/blob/main/backstage/templates/devbox/template.yaml
+      target: https://github.com/oamitpg/crossplane-demo/blob/main/backstage/templates/*/template.yaml
       rules:
         - allow: [Template]
+    # Every ordered DevBox has an entity file here; the catalog picks them up by glob.
+    - type: url
+      target: https://github.com/oamitpg/crossplane-demo/blob/main/backstage/catalog/devboxes/*.yaml
+      rules:
+        - allow: [Resource]
+    # Demo landscape for the catalog graph
+    - type: url
+      target: https://github.com/oamitpg/crossplane-demo/blob/main/backstage/catalog/demo/lab-shop.yaml
+      rules:
+        - allow: [Domain, System, Group, User, API, Component, Resource]

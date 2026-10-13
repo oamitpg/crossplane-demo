@@ -1,0 +1,251 @@
+# Demo landscape for the Backstage catalog graph ("Lab Shop"). Each entity exists to show a relation:
+#   childOf/parentOf   Group hierarchy (engineering -> lab-admins, app-team, platform-team)
+#   memberOf/hasMember User -> Group
+#   ownedBy/ownerOf    everything has an owner
+#   partOf/hasPart     Component/API/Resource -> System -> Domain
+#   providesApi/apiProvidedBy, consumesApi/apiConsumedBy   Component <-> API
+#   dependsOn/dependencyOf   Component -> Resource (incl. the real DevBox `helloworld` it "runs on")
+#   subcomponentOf     order-worker -> orders-service
+# Open an entity and look at the "Relations" card, or go to /catalog-graph.
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: lab-platform
+  description: Everything run on the Proxmox lab.
+spec:
+  owner: group:default/engineering
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: lab-shop
+  description: Demo web shop used to show off the catalog graph.
+spec:
+  owner: group:default/app-team
+  domain: lab-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: devbox-platform
+  description: Self-service DevBoxes (Backstage -> git -> Argo CD -> Crossplane -> Proxmox).
+spec:
+  owner: group:default/lab-admins
+  domain: lab-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: engineering
+  description: All engineers.
+spec:
+  type: organization
+  children: [lab-admins, app-team, platform-team]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: lab-admins
+spec:
+  type: team
+  parent: engineering
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+spec:
+  type: team
+  parent: engineering
+  children: [sre]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: sre
+  description: On-call rotation inside the platform team.
+spec:
+  type: team
+  parent: platform-team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: app-team
+spec:
+  type: team
+  parent: engineering
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: oamitpg
+spec:
+  memberOf: [lab-admins, app-team]
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: orders-api
+  description: Create and look up orders.
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:default/app-team
+  system: lab-shop
+  definition: |
+    openapi: 3.0.3
+    info: {title: Orders API, version: 1.0.0}
+    paths:
+      /orders:
+        post: {summary: Create an order, responses: {"201": {description: Created}}}
+      /orders/{id}:
+        get:
+          summary: Get an order
+          parameters: [{name: id, in: path, required: true, schema: {type: string}}]
+          responses: {"200": {description: OK}}
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: payments-api
+  description: Charge and refund payments.
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:default/platform-team
+  system: lab-shop
+  definition: |
+    openapi: 3.0.3
+    info: {title: Payments API, version: 2.1.0}
+    paths:
+      /charges:
+        post: {summary: Charge a card, responses: {"201": {description: Charged}}}
+      /refunds:
+        post: {summary: Refund a charge, responses: {"201": {description: Refunded}}}
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: inventory-api
+  description: Stock levels.
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: group:default/app-team
+  system: lab-shop
+  definition: |
+    openapi: 3.0.3
+    info: {title: Inventory API, version: 0.3.0}
+    paths:
+      /stock/{sku}:
+        get:
+          summary: Stock for a SKU
+          parameters: [{name: sku, in: path, required: true, schema: {type: string}}]
+          responses: {"200": {description: OK}}
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: shop-frontend
+  description: Customer-facing web UI.
+  tags: [react, web]
+spec:
+  type: website
+  lifecycle: production
+  owner: group:default/app-team
+  system: lab-shop
+  consumesApis: [orders-api, inventory-api]
+  dependsOn: [component:orders-service]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: orders-service
+  description: Order handling. Runs on the helloworld DevBox.
+  tags: [go, backend]
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/app-team
+  system: lab-shop
+  providesApis: [orders-api]
+  consumesApis: [payments-api, inventory-api]
+  dependsOn: [resource:orders-db, resource:order-queue, resource:helloworld]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: order-worker
+  description: Async order fulfilment, part of orders-service.
+  tags: [go, worker]
+spec:
+  type: worker
+  lifecycle: production
+  owner: group:default/app-team
+  system: lab-shop
+  subcomponentOf: orders-service
+  consumesApis: [inventory-api]
+  dependsOn: [resource:order-queue]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: payments-service
+  description: Card payments, owned by the platform team.
+  tags: [java, backend]
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/platform-team
+  system: lab-shop
+  providesApis: [payments-api]
+  dependsOn: [resource:payments-db, resource:alice-dev]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: inventory-service
+  description: Stock levels (still experimental).
+  tags: [python, backend]
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/app-team
+  system: lab-shop
+  providesApis: [inventory-api]
+  dependsOn: [resource:orders-db]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: orders-db
+  description: PostgreSQL for orders and inventory.
+spec:
+  type: database
+  owner: group:default/app-team
+  system: lab-shop
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: payments-db
+  description: PostgreSQL for payments.
+spec:
+  type: database
+  owner: group:default/platform-team
+  system: lab-shop
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: order-queue
+  description: Work queue for order fulfilment.
+spec:
+  type: message-queue
+  owner: group:default/app-team
+  system: lab-shop

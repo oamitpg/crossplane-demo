@@ -1,0 +1,53 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: remove-devbox
+  title: Remove a DevBox
+  description: Deprovision one of your DevBoxes. The manifest is deleted from git; Argo CD prunes it and Crossplane deletes the container.
+  tags:
+    - devbox
+    - proxmox
+    - crossplane
+spec:
+  owner: group:default/lab-admins
+  type: devbox
+
+  parameters:
+    - title: Which DevBox?
+      required: [devbox, confirm]
+      properties:
+        devbox:
+          title: DevBox
+          type: string
+          description: Only DevBoxes you own are listed.
+          ui:field: OwnedEntityPicker
+          ui:options:
+            catalogFilter:
+              - kind: Resource
+                spec.type: devbox
+        confirm:
+          title: I understand this permanently deletes the container and its data
+          type: boolean
+          default: false
+          enum: [true]
+          enumNames: ['Yes, delete it']
+
+  steps:
+    - id: delete
+      name: Delete from git
+      action: devbox:delete
+      input:
+        repoUrl: github.com?owner=oamitpg&repo=crossplane-demo
+        paths:
+          - devboxes/${{ (parameters.devbox | parseEntityRef).name }}.yaml
+          - backstage/catalog/devboxes/${{ (parameters.devbox | parseEntityRef).name }}.yaml
+        message: 'devbox: remove ${{ (parameters.devbox | parseEntityRef).name }}'
+        authorName: ${{ (user.ref | parseEntityRef).name }}
+        authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
+
+  output:
+    text:
+      - title: What happens next
+        content: |
+          `${{ (parameters.devbox | parseEntityRef).name }}` was removed from git. Argo CD prunes the DevBox within a few minutes and
+          Crossplane deletes the container in Proxmox. The catalog entry disappears shortly after.

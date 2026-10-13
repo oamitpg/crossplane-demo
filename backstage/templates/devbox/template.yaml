@@ -60,12 +60,25 @@ spec:
         authorName: ${{ (user.ref | parseEntityRef).name }}
         authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
 
+    - id: register
+      name: Add to the Backstage catalog
+      action: devbox:commit
+      input:
+        repoUrl: github.com?owner=oamitpg&repo=crossplane-demo
+        sourcePath: catalog/${{ parameters.name }}.yaml
+        targetPath: backstage/catalog/devboxes/${{ parameters.name }}.yaml
+        message: 'catalog: register devbox ${{ parameters.name }}'
+        authorName: ${{ (user.ref | parseEntityRef).name }}
+        authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
+
   output:
     links:
       - title: DevBox manifest in git
         url: ${{ steps.commit.output.fileUrl }}
       - title: Commit
         url: ${{ steps.commit.output.commitUrl }}
+      - title: DevBox in the catalog (appears within a few minutes)
+        url: /catalog/default/resource/${{ parameters.name }}
     text:
       - title: What happens next
         content: |

@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: backstage
-          image: lab/backstage:0.1.0
+          image: lab/backstage:0.1.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7007

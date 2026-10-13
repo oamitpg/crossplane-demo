@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: alice-dev
+  description: DevBox alice-dev - small LXC container on Proxmox node pve1
+  tags:
+    - devbox
+    - small
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/devboxes/
+  links:
+    - title: DevBox manifest in git
+      url: https://github.com/oamitpg/crossplane-demo/blob/main/devboxes/alice-dev.yaml
+spec:
+  type: devbox
+  owner: group:default/lab-admins
+  lifecycle: experimental
