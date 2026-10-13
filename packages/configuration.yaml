@@ -9,5 +9,3 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
 spec:
   package: ghcr.io/oamitpg/devbox-platform:v0.1.0
-  packagePullSecrets:
-    - name: ghcr-pull

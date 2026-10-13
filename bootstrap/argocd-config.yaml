@@ -17,7 +17,7 @@ data:
         local hs = {}
         if obj.status == nil or obj.status.conditions == nil then
           -- Compositions and ProviderConfigs never report conditions; they are healthy once they exist
-          if obj.kind == "Composition" or obj.kind == "ProviderConfig" or obj.kind == "ClusterProviderConfig" then
+          if obj.kind == "Composition" or obj.kind == "ImageConfig" or obj.kind == "ProviderConfig" or obj.kind == "ClusterProviderConfig" then
             hs.status = "Healthy"
             return hs
           end

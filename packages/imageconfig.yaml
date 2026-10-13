@@ -1,0 +1,17 @@
+# Credentials for pulling our private packages from ghcr, including the embedded function that the
+# Configuration pulls in as a dependency (packagePullSecrets on the Configuration alone does not cover it).
+# The ghcr-pull Secret is created by hand in crossplane-system (see README), not stored in git.
+apiVersion: pkg.crossplane.io/v1beta1
+kind: ImageConfig
+metadata:
+  name: ghcr-oamitpg
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  matchImages:
+    - type: Prefix
+      prefix: ghcr.io/oamitpg
+  registry:
+    authentication:
+      pullSecretRef:
+        name: ghcr-pull
