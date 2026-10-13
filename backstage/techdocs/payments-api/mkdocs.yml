@@ -1,0 +1,7 @@
+site_name: payments-api
+nav:
+  - Overview: index.md
+  - Endpoints: endpoints.md
+  - Consumers: consumers.md
+plugins:
+  - techdocs-core

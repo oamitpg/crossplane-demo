@@ -39,6 +39,17 @@ auth:
             - resolver: usernameMatchingUserEntityName
               dangerouslyAllowSignInWithoutUserInCatalog: true
 
+# TechDocs: the backend builds each entity's mkdocs site on demand (mkdocs is installed in the image, so no Docker-in-Docker),
+# reading sources from GitHub via the techdocs-ref annotation. Output lives in the pod and is rebuilt after a restart.
+techdocs:
+  builder: local
+  generator:
+    runIn: local
+  publisher:
+    type: local
+    local:
+      publishDirectory: /tmp/techdocs
+
 # Live status of DevBoxes. Backstage runs in the cluster it reads, so with authProvider serviceAccount and no token it
 # uses the pod's own service account (RBAC in backstage/deploy/rbac.yaml).
 kubernetes:

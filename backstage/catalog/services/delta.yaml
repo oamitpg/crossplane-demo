@@ -4,6 +4,7 @@ metadata:
   name: delta
   description: "Records every supply transfer between depots and units."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/delta
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/delta/
     backstage.io/kubernetes-id: delta
     backstage.io/kubernetes-namespace: army-services

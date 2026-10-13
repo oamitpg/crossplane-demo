@@ -51,6 +51,9 @@ backend.add(import('@backstage/plugin-search-backend-module-pg'));
 // search collators
 backend.add(import('@backstage/plugin-search-backend-module-catalog'));
 
+// techdocs plugin: builds mkdocs sites from the techdocs-ref of each entity
+backend.add(import('@backstage/plugin-techdocs-backend'));
+
 // kubernetes plugin: live status of DevBox resources
 backend.add(import('@backstage/plugin-kubernetes-backend'));
 

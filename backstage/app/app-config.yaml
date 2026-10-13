@@ -17,6 +17,15 @@ app:
     #     config:
     #       path: /
 
+    # The graph page draws the neighbourhood of rootEntityRefs; with none it is blank.
+    - page:catalog-graph:
+        config:
+          rootEntityRefs:
+            - system:default/lab-shop
+          maxDepth: 3
+          unidirectional: true
+          mergeRelations: true
+
     # Visit tracking records which pages users navigate to and is disabled by default.
     # Enable it to populate the Most Visited and Recently Visited widgets on the Home page.
     # Visit data is stored via UserSettings storage if available, otherwise browser localStorage.

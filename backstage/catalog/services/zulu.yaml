@@ -4,6 +4,7 @@ metadata:
   name: zulu
   description: "Authoritative clock and append-only audit trail for the whole landscape."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/zulu
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/zulu/
     backstage.io/kubernetes-id: zulu
     backstage.io/kubernetes-namespace: army-services

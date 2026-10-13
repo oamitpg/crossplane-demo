@@ -4,6 +4,7 @@ metadata:
   name: mike
   description: "Builds mission schedules from weather, fleet and ration data."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/mike
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/mike/
     backstage.io/kubernetes-id: mike
     backstage.io/kubernetes-namespace: army-services

@@ -29,8 +29,11 @@ RUN mkdir packages/backend/dist/skeleton packages/backend/dist/bundle && \
 FROM node:24-trixie-slim
 ENV PYTHON=/usr/bin/python3
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python3 g++ build-essential libsqlite3-dev && \
+    apt-get install -y --no-install-recommends python3 python3-venv g++ build-essential libsqlite3-dev && \
+    python3 -m venv /opt/techdocs && \
+    /opt/techdocs/bin/pip install --no-cache-dir mkdocs-techdocs-core && \
     rm -rf /var/lib/apt/lists/*
+ENV PATH=/opt/techdocs/bin:$PATH
 USER node
 WORKDIR /app
 COPY --from=build --chown=node:node /app/.yarn ./.yarn

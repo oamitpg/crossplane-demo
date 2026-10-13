@@ -4,6 +4,7 @@ metadata:
   name: alpha
   description: "Single front door for every command-post application; routes and rate-limits requests."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/alpha
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/alpha/
     backstage.io/kubernetes-id: alpha
     backstage.io/kubernetes-namespace: army-services

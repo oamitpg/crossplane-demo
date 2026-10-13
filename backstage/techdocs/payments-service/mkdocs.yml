@@ -1,0 +1,7 @@
+site_name: payments-service
+nav:
+  - Overview: index.md
+  - Architecture: architecture.md
+  - Runbook: runbook.md
+plugins:
+  - techdocs-core

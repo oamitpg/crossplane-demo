@@ -1,0 +1,7 @@
+site_name: alpha
+nav:
+  - Overview: index.md
+  - Dependencies: dependencies.md
+  - Runbook: runbook.md
+plugins:
+  - techdocs-core

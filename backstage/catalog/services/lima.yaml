@@ -4,6 +4,7 @@ metadata:
   name: lima
   description: "Forecasts ration needs for deployed units."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/lima
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/lima/
     backstage.io/kubernetes-id: lima
     backstage.io/kubernetes-namespace: army-services

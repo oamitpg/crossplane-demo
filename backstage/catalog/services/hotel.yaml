@@ -4,6 +4,7 @@ metadata:
   name: hotel
   description: "Medical supply levels and unit readiness status."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/hotel
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/hotel/
     backstage.io/kubernetes-id: hotel
     backstage.io/kubernetes-namespace: army-services

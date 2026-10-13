@@ -4,6 +4,7 @@ metadata:
   name: charlie
   description: "Message bus carrying orders and acknowledgements between command posts and units."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/charlie
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/charlie/
     backstage.io/kubernetes-id: charlie
     backstage.io/kubernetes-namespace: army-services

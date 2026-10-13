@@ -85,12 +85,15 @@ kind: User
 metadata:
   name: oamitpg
 spec:
-  memberOf: [lab-admins, app-team]
+  # The army units are listed so the "Owned" filter (docs, catalog) covers the whole landscape for the lab owner.
+  memberOf: [lab-admins, app-team, platform-team, command-staff, signals-battalion, logistics-corps, field-operations-unit]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: orders-api
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/orders-api
   description: Create and look up orders.
 spec:
   type: openapi
@@ -113,6 +116,8 @@ apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: payments-api
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/payments-api
   description: Charge and refund payments.
 spec:
   type: openapi
@@ -132,6 +137,8 @@ apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: inventory-api
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/inventory-api
   description: Stock levels.
 spec:
   type: openapi
@@ -152,6 +159,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: shop-frontend
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/shop-frontend
   description: Customer-facing web UI.
   tags: [react, web]
 spec:
@@ -166,6 +175,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: orders-service
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/orders-service
   description: Order handling. Runs on the helloworld DevBox.
   tags: [go, backend]
 spec:
@@ -181,6 +192,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: order-worker
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/order-worker
   description: Async order fulfilment, part of orders-service.
   tags: [go, worker]
 spec:
@@ -196,6 +209,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: payments-service
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/payments-service
   description: Card payments, owned by the platform team.
   tags: [java, backend]
 spec:
@@ -210,6 +225,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: inventory-service
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/inventory-service
   description: Stock levels (still experimental).
   tags: [python, backend]
 spec:

@@ -78,6 +78,28 @@ spec:
         authorName: ${{ (user.ref | parseEntityRef).name }}
         authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
 
+    - id: docs-config
+      name: Add the TechDocs site
+      action: devbox:commit
+      input:
+        repoUrl: github.com?owner=oamitpg&repo=crossplane-demo
+        sourcePath: techdocs/mkdocs.yml
+        targetPath: backstage/techdocs/${{ parameters.name }}/mkdocs.yml
+        message: 'docs: add techdocs site for ${{ parameters.name }}'
+        authorName: ${{ (user.ref | parseEntityRef).name }}
+        authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
+
+    - id: docs-page
+      name: Add the first docs page
+      action: devbox:commit
+      input:
+        repoUrl: github.com?owner=oamitpg&repo=crossplane-demo
+        sourcePath: techdocs/docs/index.md
+        targetPath: backstage/techdocs/${{ parameters.name }}/docs/index.md
+        message: 'docs: first page for ${{ parameters.name }}'
+        authorName: ${{ (user.ref | parseEntityRef).name }}
+        authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
+
     - id: register
       name: Add to the Backstage catalog
       action: devbox:commit

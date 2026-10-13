@@ -4,6 +4,7 @@ metadata:
   name: bravo
   description: "Issues and validates credentials and role-based access for every other service."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/bravo
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/bravo/
     backstage.io/kubernetes-id: bravo
     backstage.io/kubernetes-namespace: army-services

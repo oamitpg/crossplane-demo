@@ -4,6 +4,7 @@ metadata:
   name: golf
   description: "Stock levels at each depot."
   annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/golf
     backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/golf/
     backstage.io/kubernetes-id: golf
     backstage.io/kubernetes-namespace: army-services
