@@ -1,0 +1,49 @@
+# Production overrides, merged over app-config.yaml. Everything environment-specific comes from env vars
+# (set in ../deploy/backstage.yaml); secrets come from the `backstage-secrets` Secret, never from git.
+app:
+  title: Lab DevBox Portal
+  baseUrl: ${BACKSTAGE_BASE_URL}
+
+organization:
+  name: Lab
+
+backend:
+  baseUrl: ${BACKSTAGE_BASE_URL}
+  listen: ':7007'
+  cors:
+    origin: ${BACKSTAGE_BASE_URL}
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+
+auth:
+  environment: development
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            # Lab only: anyone who can sign in with GitHub gets an identity user:default/<github login>,
+            # even without a User entity in the catalog. Restrict this before exposing the portal widely.
+            - resolver: usernameMatchingUserEntityName
+              dangerouslyAllowSignInWithoutUserInCatalog: true
+
+catalog:
+  rules:
+    - allow: [Component, System, API, Resource, Location, Template]
+  locations:
+    - type: url
+      target: https://github.com/oamitpg/crossplane-demo/blob/main/backstage/templates/devbox/template.yaml
+      rules:
+        - allow: [Template]

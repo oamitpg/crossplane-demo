@@ -1,0 +1,6 @@
+backstage/app/node_modules/
+backstage/app/.yarn/cache/
+backstage/app/.yarn/install-state.gz
+backstage/app/dist-types/
+backstage/app/packages/*/dist/
+secret.yaml

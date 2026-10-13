@@ -1,0 +1,73 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: order-devbox
+  title: Order a DevBox
+  description: Request a small Linux container (LXC) on the Proxmox lab. The request is committed to git; Argo CD and Crossplane build it.
+  tags:
+    - devbox
+    - proxmox
+    - crossplane
+spec:
+  owner: group:default/lab-admins
+  type: devbox
+
+  parameters:
+    - title: What do you need?
+      required: [name, size, node]
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Lowercase letters, digits and dashes, 3-20 characters, starting with a letter (e.g. bob-dev). Also the hostname.
+          pattern: '^[a-z][a-z0-9-]{1,18}[a-z0-9]$'
+          ui:autofocus: true
+        size:
+          title: Size
+          type: string
+          default: small
+          enum: [small, medium, large]
+          enumNames:
+            - 'small - 1 core, 256 MB RAM, 2 GB disk'
+            - 'medium - 2 cores, 1 GB RAM, 8 GB disk'
+            - 'large - 4 cores, 2 GB RAM, 16 GB disk'
+        node:
+          title: Proxmox node
+          type: string
+          default: pve1
+          enum: [pve1, pve2, pve3]
+
+  steps:
+    - id: render
+      name: Render DevBox manifest
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          size: ${{ parameters.size }}
+          node: ${{ parameters.node }}
+          requestedBy: ${{ (user.ref | parseEntityRef).name }}
+
+    - id: commit
+      name: Commit to git
+      action: devbox:commit
+      input:
+        repoUrl: github.com?owner=oamitpg&repo=crossplane-demo
+        sourcePath: ${{ parameters.name }}.yaml
+        targetPath: devboxes/${{ parameters.name }}.yaml
+        message: 'devbox: order ${{ parameters.name }} (${{ parameters.size }} on ${{ parameters.node }})'
+        authorName: ${{ (user.ref | parseEntityRef).name }}
+        authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
+
+  output:
+    links:
+      - title: DevBox manifest in git
+        url: ${{ steps.commit.output.fileUrl }}
+      - title: Commit
+        url: ${{ steps.commit.output.commitUrl }}
+    text:
+      - title: What happens next
+        content: |
+          Argo CD picks up the commit within a few minutes, Crossplane creates the container on **${{ parameters.node }}**,
+          and `${{ parameters.name }}` shows up in the Proxmox UI. Delete `devboxes/${{ parameters.name }}.yaml` in git to remove it.
