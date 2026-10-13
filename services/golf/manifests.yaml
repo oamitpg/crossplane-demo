@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golf
+  namespace: army-services
+  labels:
+    app.kubernetes.io/name: golf
+    backstage.io/kubernetes-id: golf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: golf
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: golf
+        backstage.io/kubernetes-id: golf
+    spec:
+      containers:
+        - name: service
+          # Hello-world stand-in: answers every request with the service's purpose.
+          image: hashicorp/http-echo:1.0
+          args:
+            - -listen=:8080
+            - "-text=golf: Stock levels at each depot."
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 5m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: golf
+  namespace: army-services
+  labels:
+    app.kubernetes.io/name: golf
+    backstage.io/kubernetes-id: golf
+spec:
+  selector:
+    app.kubernetes.io/name: golf
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

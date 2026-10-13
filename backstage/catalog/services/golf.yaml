@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: golf
+  description: "Stock levels at each depot."
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/golf/
+    backstage.io/kubernetes-id: golf
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-golf
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/logistics-corps
+  system: system:default/logistics
+  dependsOn:
+    - component:default/zulu

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bravo
+  namespace: army-services
+  labels:
+    app.kubernetes.io/name: bravo
+    backstage.io/kubernetes-id: bravo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bravo
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: bravo
+        backstage.io/kubernetes-id: bravo
+    spec:
+      containers:
+        - name: service
+          # Hello-world stand-in: answers every request with the service's purpose.
+          image: hashicorp/http-echo:1.0
+          args:
+            - -listen=:8080
+            - "-text=bravo: Issues and validates credentials and role-based access for every other service."
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 5m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bravo
+  namespace: army-services
+  labels:
+    app.kubernetes.io/name: bravo
+    backstage.io/kubernetes-id: bravo
+spec:
+  selector:
+    app.kubernetes.io/name: bravo
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

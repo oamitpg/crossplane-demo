@@ -1,0 +1,44 @@
+# One Argo CD Application per folder in services/ (named svc-<callsign>), all deploying into the army-services namespace.
+# Adding a folder creates an Application; removing it deletes the Application and, via the finalizer, its resources.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: services
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: ssh://git@github.com/oamitpg/crossplane-demo.git
+        revision: main
+        directories:
+          - path: services/*
+  template:
+    metadata:
+      name: 'svc-{{ .path.basename }}'
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: default
+      source:
+        repoURL: ssh://git@github.com/oamitpg/crossplane-demo.git
+        targetRevision: main
+        path: '{{ .path.path }}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: army-services
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 2m

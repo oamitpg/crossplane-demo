@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel
+  namespace: army-services
+  labels:
+    app.kubernetes.io/name: hotel
+    backstage.io/kubernetes-id: hotel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hotel
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hotel
+        backstage.io/kubernetes-id: hotel
+    spec:
+      containers:
+        - name: service
+          # Hello-world stand-in: answers every request with the service's purpose.
+          image: hashicorp/http-echo:1.0
+          args:
+            - -listen=:8080
+            - "-text=hotel: Medical supply levels and unit readiness status."
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 5m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel
+  namespace: army-services
+  labels:
+    app.kubernetes.io/name: hotel
+    backstage.io/kubernetes-id: hotel
+spec:
+  selector:
+    app.kubernetes.io/name: hotel
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

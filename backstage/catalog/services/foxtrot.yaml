@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: foxtrot
+  description: "Live position and status of every vehicle in the field."
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/foxtrot/
+    backstage.io/kubernetes-id: foxtrot
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-foxtrot
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/field-operations-unit
+  system: system:default/field-operations
+  dependsOn:
+    - component:default/charlie
+    - component:default/echo

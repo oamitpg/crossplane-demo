@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: delta
+  description: "Records every supply transfer between depots and units."
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/delta/
+    backstage.io/kubernetes-id: delta
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-delta
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/logistics-corps
+  system: system:default/logistics
+  dependsOn:
+    - component:default/bravo
+    - component:default/zulu
+    - component:default/golf

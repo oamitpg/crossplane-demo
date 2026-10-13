@@ -1,0 +1,79 @@
+# Fictional "Field Command" landscape: twelve services named by phonetic callsign, in three systems, owned by four units.
+# Each service is a Component in backstage/catalog/services/ and a Deployment in services/<callsign>/ (see the
+# deploy-army-service template). Dependency graph (A -> B means A dependsOn B):
+#   alpha   -> bravo, charlie, mike        delta -> bravo, zulu, golf       hotel -> delta, bravo
+#   bravo   -> zulu                        echo  -> (none)                  kilo  -> foxtrot, golf
+#   charlie -> bravo                       foxtrot -> charlie, echo         lima  -> delta
+#   golf    -> zulu                        mike  -> echo, foxtrot, lima     zulu  -> (none)
+# Open /catalog-graph on any of them to see it.
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: field-command
+  description: Fictional field-command software landscape.
+spec:
+  owner: group:default/command-staff
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: command-and-control
+  description: Orders, identity, communications and the audit trail.
+spec:
+  owner: group:default/command-staff
+  domain: field-command
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: logistics
+  description: Supply, fuel, rations and medical readiness.
+spec:
+  owner: group:default/logistics-corps
+  domain: field-command
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: field-operations
+  description: Weather and vehicle tracking for units in the field.
+spec:
+  owner: group:default/field-operations-unit
+  domain: field-command
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: command-staff
+  description: Owns planning and the command gateway.
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: signals-battalion
+  description: Owns identity, communications and the audit trail.
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: logistics-corps
+  description: Owns supply, fuel, rations and medical readiness.
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: field-operations-unit
+  description: Owns weather and fleet tracking.
+spec:
+  type: team
+  children: []

@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: alpha
+  description: "Single front door for every command-post application; routes and rate-limits requests."
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/alpha/
+    backstage.io/kubernetes-id: alpha
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-alpha
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/command-staff
+  system: system:default/command-and-control
+  dependsOn:
+    - component:default/bravo
+    - component:default/charlie
+    - component:default/mike

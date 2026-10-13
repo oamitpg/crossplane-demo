@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bravo
+  description: "Issues and validates credentials and role-based access for every other service."
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/bravo/
+    backstage.io/kubernetes-id: bravo
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-bravo
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/signals-battalion
+  system: system:default/command-and-control
+  dependsOn:
+    - component:default/zulu

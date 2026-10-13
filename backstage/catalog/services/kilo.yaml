@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: kilo
+  description: "Tracks fuel levels per depot and per vehicle."
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/kilo/
+    backstage.io/kubernetes-id: kilo
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-kilo
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/logistics-corps
+  system: system:default/logistics
+  dependsOn:
+    - component:default/foxtrot
+    - component:default/golf

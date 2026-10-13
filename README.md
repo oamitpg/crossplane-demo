@@ -32,7 +32,14 @@ apps/        Argo Applications (app of apps), sync-waves: packages 0 -> platform
 packages/    Provider, Functions, ClusterProviderConfig
 platform/    XRD + Composition (the DevBox API)
 devboxes/    Namespace + DevBox requests (add yours here)
+services/    One folder per fictional field-command service (alpha ... zulu): a Deployment + Service each.
+             An ApplicationSet (apps/services.yaml) turns every folder into an Argo CD Application `svc-<callsign>`
+backstage/   Portal: app/ (source + Dockerfile), deploy/ (manifests Argo applies), catalog/ (entities), templates/
 ```
+
+The Backstage portal has one template, **Stand up a field service** (`backstage/templates/army-service`): it commits
+`services/<callsign>/manifests.yaml` and a catalog entry, so the new service shows up with its owner, system and
+dependencies, plus live Kubernetes and Argo CD status tabs. The landscape itself is `backstage/catalog/army/landscape.yaml`.
 
 ## Bootstrap (once)
 ```bash
@@ -44,6 +51,8 @@ helm install crossplane crossplane-stable/crossplane --version 2.4.2 -n crosspla
 kubectl create namespace argocd
 kubectl apply -n argocd --server-side -f https://raw.githubusercontent.com/argoproj/argo-cd/v3.5.5/manifests/install.yaml
 kubectl -n argocd patch configmap argocd-cm --patch-file bootstrap/argocd-config.yaml
+#    read-only `backstage` account for the Backstage Argo CD plugin; its token goes in Secret backstage-secrets (ARGOCD_AUTH_TOKEN)
+kubectl -n argocd patch configmap argocd-rbac-cm --patch-file bootstrap/argocd-rbac.yaml
 #    repo credential: Secret in argocd ns labelled argocd.argoproj.io/secret-type=repository
 #    with url=ssh://git@github.com/oamitpg/crossplane-demo.git and sshPrivateKey=<read-only deploy key>
 # 4. Hand over to git

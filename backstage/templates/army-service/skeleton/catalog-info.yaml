@@ -1,0 +1,23 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name }}
+  description: ${{ values.description | dump }}
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/${{ values.name }}/
+    backstage.io/kubernetes-id: ${{ values.name }}
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-${{ values.name }}
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  system: ${{ values.system }}
+{%- if values.dependsOn and values.dependsOn | length %}
+  dependsOn:
+{%- for dep in values.dependsOn %}
+    - ${{ dep }}
+{%- endfor %}
+{%- endif %}

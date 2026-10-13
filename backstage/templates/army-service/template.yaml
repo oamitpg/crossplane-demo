@@ -1,0 +1,97 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: deploy-army-service
+  title: Stand up a field service
+  description: A new hello-world service for the field-command landscape. Deployed by Argo CD onto Kubernetes, registered in the catalog with its owner and dependencies.
+  tags:
+    - service
+    - kubernetes
+spec:
+  owner: group:default/lab-admins
+  type: service
+
+  parameters:
+    - title: About the service
+      required: [name, description, owner, system]
+      properties:
+        name:
+          title: Callsign
+          type: string
+          description: Lowercase letters, digits and dashes, 3-20 characters (e.g. november).
+          pattern: '^[a-z][a-z0-9-]{1,18}[a-z0-9]$'
+          ui:autofocus: true
+        description:
+          title: Purpose
+          type: string
+          description: One sentence on what the service does.
+          maxLength: 160
+        owner:
+          title: Owning unit
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+        system:
+          title: System
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: System
+        dependsOn:
+          title: Depends on
+          type: array
+          description: Other services this one calls (optional).
+          uniqueItems: true
+          items:
+            type: string
+            ui:field: EntityPicker
+            ui:options:
+              catalogFilter:
+                kind: Component
+                spec.type: service
+
+  steps:
+    - id: render
+      name: Render manifests and catalog entry
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          dependsOn: ${{ parameters.dependsOn }}
+
+    # The manifests go first: if the callsign is taken this step fails and nothing else is written.
+    - id: commit
+      name: Commit manifests to git
+      action: devbox:commit
+      input:
+        repoUrl: github.com?owner=oamitpg&repo=crossplane-demo
+        sourcePath: manifests.yaml
+        targetPath: services/${{ parameters.name }}/manifests.yaml
+        message: 'service: stand up ${{ parameters.name }}'
+        authorName: ${{ (user.ref | parseEntityRef).name }}
+        authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
+
+    - id: register
+      name: Add to the Backstage catalog
+      action: devbox:commit
+      input:
+        repoUrl: github.com?owner=oamitpg&repo=crossplane-demo
+        sourcePath: catalog-info.yaml
+        targetPath: backstage/catalog/services/${{ parameters.name }}.yaml
+        message: 'catalog: register ${{ parameters.name }}'
+        authorName: ${{ (user.ref | parseEntityRef).name }}
+        authorEmail: ${{ (user.ref | parseEntityRef).name }}@users.noreply.github.com
+
+  output:
+    links:
+      - title: Manifests in git
+        url: ${{ steps.commit.output.fileUrl }}
+      - title: Service in the catalog (appears within a few minutes)
+        url: /catalog/default/component/${{ parameters.name }}

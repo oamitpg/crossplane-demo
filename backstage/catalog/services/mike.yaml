@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mike
+  description: "Builds mission schedules from weather, fleet and ration data."
+  annotations:
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/mike/
+    backstage.io/kubernetes-id: mike
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-mike
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/command-staff
+  system: system:default/command-and-control
+  dependsOn:
+    - component:default/echo
+    - component:default/foxtrot
+    - component:default/lima

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alpha
+  namespace: army-services
+  labels:
+    app.kubernetes.io/name: alpha
+    backstage.io/kubernetes-id: alpha
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: alpha
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: alpha
+        backstage.io/kubernetes-id: alpha
+    spec:
+      containers:
+        - name: service
+          # Hello-world stand-in: answers every request with the service's purpose.
+          image: hashicorp/http-echo:1.0
+          args:
+            - -listen=:8080
+            - "-text=alpha: Single front door for every command-post application; routes and rate-limits requests."
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 5m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alpha
+  namespace: army-services
+  labels:
+    app.kubernetes.io/name: alpha
+    backstage.io/kubernetes-id: alpha
+spec:
+  selector:
+    app.kubernetes.io/name: alpha
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
