@@ -16,6 +16,11 @@ data:
       health.lua: |
         local hs = {}
         if obj.status == nil or obj.status.conditions == nil then
+          -- Compositions and ProviderConfigs never report conditions; they are healthy once they exist
+          if obj.kind == "Composition" or string.find(obj.kind, "ProviderConfig", 1, true) then
+            hs.status = "Healthy"
+            return hs
+          end
           hs.status = "Progressing"
           hs.message = "Waiting for Crossplane to report conditions"
           return hs
