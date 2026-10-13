@@ -10,15 +10,14 @@ import { LogoIcon } from './LogoIcon';
 const useSidebarLogoStyles = makeStyles({
   root: {
     width: sidebarConfig.drawerWidthClosed,
-    height: 3 * sidebarConfig.logoHeight,
+    height: 2 * sidebarConfig.logoHeight,
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    marginBottom: -14,
   },
   link: {
     width: sidebarConfig.drawerWidthClosed,
-    marginLeft: 24,
+    marginLeft: 22,
   },
 });
 

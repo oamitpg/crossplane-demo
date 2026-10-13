@@ -1,52 +1,48 @@
 import { createFrontendModule } from '@backstage/frontend-plugin-api';
 import { HomePageWidgetBlueprint } from '@backstage/plugin-home-react/alpha';
-import { MarkdownContent } from '@backstage/core-components';
+import { ButtonLink, Flex, Text } from '@backstage/ui';
 
-const content = `
-## Welcome to Backstage! 👋
+const Welcome = () => (
+  <Flex direction="column" gap="4">
+    <Flex direction="column" gap="1">
+      <Text variant="title-medium" weight="bold">
+        Welcome to the Lab portal
+      </Text>
+      <Text variant="body-medium" color="secondary">
+        Find any service and its owner, read its docs, check how it is deployed,
+        and stand up something new, all in one place.
+      </Text>
+    </Flex>
+    <Flex gap="2" style={{ flexWrap: 'wrap' }}>
+      <ButtonLink href="/catalog" variant="primary">
+        Browse the catalog
+      </ButtonLink>
+      <ButtonLink href="/docs?filters[user]=owned" variant="secondary">
+        My documentation
+      </ButtonLink>
+      <ButtonLink href="/create" variant="secondary">
+        Create a service
+      </ButtonLink>
+      <ButtonLink href="/catalog-graph" variant="secondary">
+        Explore the graph
+      </ButtonLink>
+    </Flex>
+  </Flex>
+);
 
-Backstage is your developer portal — a single place to manage all your
-software, services, and documentation.
-
-### Quick Start
-
-- **Explore the catalog** — Browse all your organization's software in
-  the [Software Catalog](/catalog)
-- **Create something new** — Use a [Software Template](/create) to
-  scaffold a new project in minutes
-- **Read the docs** — Find technical documentation for any service
-  right from its catalog page
-
-### Helpful Links
-
-- [Backstage Documentation](https://backstage.io/docs)
-- [Customizing Your Homepage](https://backstage.io/docs/getting-started/homepage)
-- [Adding Plugins](https://backstage.io/docs/plugins)
-- [Contributing](https://github.com/backstage/backstage/blob/master/CONTRIBUTING.md)
-
-### How to Edit This Card
-
-This widget is defined in \`packages/app/src/modules/home/homeModule.tsx\`.
-You can update the markdown content there to welcome your team with
-your own links and getting started tips.
-
-To remove this card entirely, delete the getting started widget and
-remove it from the home module's extensions array in this file.
-`;
-
-const gettingStartedWidget = HomePageWidgetBlueprint.make({
-  name: 'getting-started',
+const welcomeWidget = HomePageWidgetBlueprint.make({
+  name: 'lab-welcome',
   params: {
-    name: 'GettingStarted',
-    title: 'Getting Started',
-    description: 'Tips and links to help you get started with Backstage',
+    name: 'LabWelcome',
+    title: 'Welcome',
+    description: 'Introduction and shortcuts to the main areas of the portal',
     components: async () => ({
-      Content: () => <MarkdownContent content={content} />,
+      Content: Welcome,
     }),
   },
 });
 
 export const homeModule = createFrontendModule({
   pluginId: 'home',
-  extensions: [gettingStartedWidget],
+  extensions: [welcomeWidget],
 });

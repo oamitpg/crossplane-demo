@@ -4,6 +4,7 @@ import { argocdTranslationsModule } from '@backstage-community/plugin-argocd';
 import { navModule } from './modules/nav';
 import { homeModule } from './modules/home';
 import { authModule } from './modules/auth';
+import { themeModule } from './modules/theme';
 
 export default createApp({
   features: [
@@ -11,6 +12,7 @@ export default createApp({
     navModule,
     homeModule,
     authModule,
+    themeModule,
     argocdTranslationsModule,
   ],
 });

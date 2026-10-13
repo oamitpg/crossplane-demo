@@ -1,0 +1,49 @@
+/*
+ * Lab portal overrides for Backstage UI design tokens (--bui-*), the documented way to restyle BUI components.
+ * They mirror the MUI themes in ./themes.tsx so BUI-based and MUI-based pages look the same.
+ * Unlayered rules win over BUI's `@layer tokens`, so only the attribute selectors are used (no bare :root).
+ */
+[data-theme-mode='light'] {
+  --bui-font-regular: 'Inter Variable', Inter, system-ui, sans-serif;
+  --bui-radius-3: 0.625rem;
+  --bui-radius-4: 0.875rem;
+
+  --bui-bg-app: #f8f9fb;
+  --bui-bg-neutral-1: #ffffff;
+  --bui-border-1: #e5e7eb;
+  --bui-ring: #4f46e5;
+
+  --bui-accent-bg: #4f46e5;
+  --bui-accent-bg-hover: #4338ca;
+  --bui-accent-bg-disabled: #a5b4fc;
+  --bui-accent-fg: #ffffff;
+  --bui-accent-fg-disabled: #eef2ff;
+
+  /* Deprecated, but still used by some BUI components and plugins. */
+  --bui-bg-solid: #4f46e5;
+  --bui-bg-solid-hover: #4338ca;
+  --bui-bg-solid-pressed: #3730a3;
+  --bui-bg-solid-disabled: #a5b4fc;
+}
+
+[data-theme-mode='dark'] {
+  --bui-font-regular: 'Inter Variable', Inter, system-ui, sans-serif;
+  --bui-radius-3: 0.625rem;
+  --bui-radius-4: 0.875rem;
+
+  --bui-bg-app: #0b0d12;
+  --bui-bg-neutral-1: #12151c;
+  --bui-border-1: #2a2f3a;
+  --bui-ring: #818cf8;
+
+  --bui-accent-bg: #818cf8;
+  --bui-accent-bg-hover: #a5b4fc;
+  --bui-accent-bg-disabled: #312e81;
+  --bui-accent-fg: #0b0d12;
+  --bui-accent-fg-disabled: #6366f1;
+
+  --bui-bg-solid: #818cf8;
+  --bui-bg-solid-hover: #a5b4fc;
+  --bui-bg-solid-pressed: #a5b4fc;
+  --bui-bg-solid-disabled: #312e81;
+}
