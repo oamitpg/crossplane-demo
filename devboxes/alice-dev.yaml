@@ -1,0 +1,11 @@
+apiVersion: platform.slashdir.net/v1alpha1
+kind: DevBox
+metadata:
+  name: alice-dev
+  namespace: devboxes
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  size: small
+  node: pve1

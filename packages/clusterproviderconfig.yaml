@@ -1,0 +1,16 @@
+# Namespaced managed resources (what DevBox composes) use the ".m." provider config API.
+# The credentials Secret is NOT in git: create it once by hand (see README).
+apiVersion: proxmoxbpg.m.crossplane.io/v1beta1
+kind: ClusterProviderConfig
+metadata:
+  name: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: proxmox-creds
+      key: credentials

@@ -1,0 +1,78 @@
+# Strategic-merge patch for argocd-cm, applied once by hand (see README):
+#   kubectl -n argocd patch configmap argocd-cm --patch-file bootstrap/argocd-config.yaml
+# - annotation tracking: Crossplane objects carry owner refs that confuse Argo's default label tracking
+# - Lua health: a resource is healthy only when Crossplane says so (Ready/Healthy/Established, and not Synced=False)
+# - ProviderConfigUsage objects are noise in the UI
+data:
+  application.resourceTrackingMethod: annotation
+  resource.exclusions: |
+    - apiGroups:
+        - "*.crossplane.io"
+      kinds:
+        - ProviderConfigUsage
+        - ClusterProviderConfigUsage
+  resource.customizations: |
+    "*.crossplane.io/*":
+      health.lua: |
+        local hs = {}
+        if obj.status == nil or obj.status.conditions == nil then
+          hs.status = "Progressing"
+          hs.message = "Waiting for Crossplane to report conditions"
+          return hs
+        end
+        local ready, synced, healthy, established
+        for _, c in ipairs(obj.status.conditions) do
+          if c.type == "Ready" then ready = c end
+          if c.type == "Synced" then synced = c end
+          if c.type == "Healthy" then healthy = c end
+          if c.type == "Established" then established = c end
+        end
+        if synced ~= nil and synced.status == "False" then
+          hs.status = "Degraded"
+          hs.message = synced.message or "Synced=False"
+          return hs
+        end
+        if healthy ~= nil and healthy.status == "False" then
+          hs.status = "Degraded"
+          hs.message = healthy.message or "Healthy=False"
+          return hs
+        end
+        if ready ~= nil and ready.status == "True" then
+          hs.status = "Healthy"
+          return hs
+        end
+        if healthy ~= nil and healthy.status == "True" then
+          hs.status = "Healthy"
+          return hs
+        end
+        if established ~= nil and established.status == "True" then
+          hs.status = "Healthy"
+          return hs
+        end
+        hs.status = "Progressing"
+        hs.message = (ready ~= nil and ready.message) or "Waiting for Ready=True"
+        return hs
+    "platform.slashdir.net/*":
+      health.lua: |
+        local hs = {}
+        if obj.status == nil or obj.status.conditions == nil then
+          hs.status = "Progressing"
+          hs.message = "Waiting for Crossplane to report conditions"
+          return hs
+        end
+        for _, c in ipairs(obj.status.conditions) do
+          if c.type == "Synced" and c.status == "False" then
+            hs.status = "Degraded"
+            hs.message = c.message or "Synced=False"
+            return hs
+          end
+        end
+        for _, c in ipairs(obj.status.conditions) do
+          if c.type == "Ready" and c.status == "True" then
+            hs.status = "Healthy"
+            return hs
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "Waiting for Ready=True"
+        return hs
