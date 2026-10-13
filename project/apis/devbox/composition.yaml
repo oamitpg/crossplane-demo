@@ -9,7 +9,7 @@ spec:
   mode: Pipeline
   pipeline:
   - functionRef:
-      name: evolite-devbox-platformcompose-devbox
+      name: oamitpg-devbox-platformcompose-devbox
     step: compose-devbox
   - functionRef:
       name: crossplane-contrib-function-auto-ready

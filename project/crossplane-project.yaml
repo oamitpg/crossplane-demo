@@ -10,4 +10,4 @@ spec:
       kind: Function
       package: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
       version: '>=v0.0.0'
-  repository: ghcr.io/evolite/devbox-platform
+  repository: ghcr.io/oamitpg/devbox-platform
