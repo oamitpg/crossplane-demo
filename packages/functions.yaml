@@ -10,7 +10,7 @@ spec:
 apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
-  name: function-auto-ready
+  name: crossplane-contrib-function-auto-ready
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
