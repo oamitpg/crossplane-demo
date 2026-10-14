@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sadasd
+  description: "asdfasd"
+  annotations:
+    backstage.io/techdocs-ref: url:https://github.com/oamitpg/crossplane-demo/tree/main/backstage/techdocs/sadasd
+    backstage.io/source-location: url:https://github.com/oamitpg/crossplane-demo/tree/main/services/sadasd/
+    backstage.io/kubernetes-id: sadasd
+    backstage.io/kubernetes-namespace: army-services
+    argocd/instance-name: primary
+    argocd/app-name: svc-sadasd
+    argocd/app-namespace: argocd
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/command-staff
+  system: system:default/command-and-control
