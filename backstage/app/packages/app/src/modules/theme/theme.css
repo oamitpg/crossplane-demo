@@ -3,6 +3,27 @@
  * They mirror the MUI themes in ./themes.tsx so BUI-based and MUI-based pages look the same.
  * Unlayered rules win over BUI's `@layer tokens`, so only the attribute selectors are used (no bare :root).
  */
+/*
+ * Paint the app background on every layer that can show below the content (html, body, #root), so tall windows
+ * never reveal the browser's default white. The mode attribute lives on <body>, hence :has() for <html>.
+ */
+html:has(body[data-theme-mode='light']) {
+  background-color: #f8f9fb;
+}
+
+html:has(body[data-theme-mode='dark']) {
+  background-color: #0b0d12;
+}
+
+body {
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: var(--bui-bg-app);
+}
+
 [data-theme-mode='light'] {
   --bui-font-regular: 'Inter Variable', Inter, system-ui, sans-serif;
   --bui-radius-3: 0.625rem;

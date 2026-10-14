@@ -34,7 +34,7 @@ spec:
       serviceAccountName: backstage
       containers:
         - name: backstage
-          image: lab/backstage:0.1.6
+          image: lab/backstage:0.1.7
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7007
